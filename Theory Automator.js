@@ -23,6 +23,12 @@ var init = () => {
     }
 }
 
+var tick = (elapsedTime, multiplier) => {
+    let dt = BigNumber.from(elapsedTime * multiplier);
+    let bonus = theory.publicationMultiplier;
+    currency.value += dt * bonus * getA1(a1.level).pow(1.025)
+}
+
 var getPrimaryEquation = () => {
     let result = "\\dot{\\rho} = a_1^{1.025}a_2";
 
