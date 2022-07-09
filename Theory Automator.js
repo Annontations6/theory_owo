@@ -28,7 +28,7 @@ var init = () => {
     theory.createBuyAllUpgrade(1, currency, 1e15);
        //c1
       {
-        c1 = theory.createPermanentUpgrade(2, currency1, new ExponentialCost(1e4, Math.log2(10)));
+        c1 = theory.createPermanentUpgrade(2, currency, new ExponentialCost(1e4, Math.log2(10)));
         c1.getDescription = (amount) => "$\\uparrow$ $a_1$ factor by 1";
         c1.getInfo = (amount) => "$\\uparrow$ $a_1$ factor by 1";
     }
