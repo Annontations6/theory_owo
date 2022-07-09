@@ -15,12 +15,28 @@ var init = () => {
   
   // a1
     {
-        let getDesc = (level) => "a_1=\\sqrt{" + level + "}";
+        let getDesc = (level) => "a_1=" + getA1Factor(c1.level) + "\\sqrt{" + level + "}";
         let getInfo = (level) => "a_1=" + getA1(level).toString(0);
-        a1 = theory.createUpgrade(1, currency, new ExponentialCost(5, Math.log2(3)));
+        a1 = theory.createUpgrade(1, currency, new FirstFreeCost(new ExponentialCost(5, Math.log2(3))));
         a1.getDescription = (_) => Utils.getMath(getDesc(a1.level));
         a1.getInfo = (amount) => Utils.getMathTo(getInfo(a1.level), getInfo(a1.level + amount));
     }
+  
+    /////////////////////
+    // Permanent Upgrades
+    theory.createPublicationUpgrade(0, currency, 1e9);
+    theory.createBuyAllUpgrade(1, currency, 1e15);
+       //c1
+      {
+        c1 = theory.createPermanentUpgrade(2, currency1, new ExponentialCost(1e4, Math.log2(10)));
+        c1.getDescription = (amount) => "$\\uparrow$ $a_1$ factor by 1";
+        c1.getInfo = (amount) => "$\\uparrow$ $a_1$ factor by 1";
+    }
+    theory.createAutoBuyerUpgrade(3, currency, 1e35);
+  
+    ///////////////////////
+    //// Milestone Upgrades
+    theory.setMilestoneCost(new LinearCost(2, 2));
 }
 
 var tick = (elapsedTime, multiplier) => {
@@ -36,11 +52,12 @@ var getPrimaryEquation = () => {
 }
 
 var getSecondaryEquation = () => theory.latexSymbol + "=\\max\\rho^{0.2}";
-var getPublicationMultiplier = (tau) => tau.pow(0.164) / BigNumber.THREE;
-var getPublicationMultiplierFormula = (symbol) => "\\frac{{" + symbol + "}^{0.164}}{3}";
+var getPublicationMultiplier = (tau) => tau.pow(0.404) / BigNumber.THREE;
+var getPublicationMultiplierFormula = (symbol) => "\\frac{{" + symbol + "}^{0.404}}{3}";
 var getTau = () => currency.value.pow(0.2);
 var get2DGraphValue = () => currency.value.sign * (BigNumber.ONE + currency.value.abs()).log10().toNumber();
 
-var getA1 = (level) => BigNumber.from(level).sqrt();
+var getA1 = (level) => BigNumber.from(level).sqrt() * getA1Factor(c1.level);
+var getA1Factor = (level) => BigNumber.from(1 + level);
 
 init();
