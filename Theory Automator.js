@@ -82,6 +82,8 @@ var getTau = () => currency.value.pow(0.2);
 var get2DGraphValue = () => currency.value.sign * (BigNumber.ONE + currency.value.abs()).log10().toNumber();
 
 var getA1 = (level) => BigNumber.from(level).sqrt() * getA1Factor(c1.level);
+var getA2 = (level) => BigNumber.from(level).sqrt() * getA2Factor(c2.level);
 var getA1Factor = (level) => BigNumber.from(1 + level);
+var getA2Factor = (level) => BigNumber.from(1 + level);
 
 init();
