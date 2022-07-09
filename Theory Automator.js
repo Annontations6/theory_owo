@@ -79,6 +79,16 @@ var init = () => {
         };
     }
   
+  {
+        a3Exp = theory.createMilestoneUpgrade(1, 4);
+        a3Exp.description = Localization.getUpgradeIncCustomExpDesc("a_2", "0.05");
+        a3Exp.info = Localization.getUpgradeIncCustomExpInfo("a_2", "0.05");
+        a3Exp.boughtOrRefunded = (_) => { 
+          updateAvailability();
+          theory.invalidatePrimaryEquation() 
+        };
+    }
+  
     /////////////////
     //// Achievements
     let achievement_category_1 = theory.createAchievementCategory(0, "Timer");
@@ -88,7 +98,7 @@ var init = () => {
 }
 
 var updateAvailability = () => {
-    //something releated
+    a3Exp.isAvailable = a2Exp.level > 0;
 }
 
 var tick = (elapsedTime, multiplier) => {
