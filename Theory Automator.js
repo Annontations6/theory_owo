@@ -32,6 +32,14 @@ var init = () => {
         a2.getDescription = (_) => Utils.getMath(getDesc(a2.level));
         a2.getInfo = (amount) => Utils.getMathTo(getInfo(a2.level), getInfo(a2.level + amount));
     }
+  // a3
+    {
+        let getDesc = (level) => "a_3=" + getA3Factor(c3.level) + "\\sqrt{" + level + "}";
+        let getInfo = (level) => "a_3=" + getA3(level).toString(0);
+        a3 = theory.createUpgrade(1, currency, new FirstFreeCost(new ExponentialCost(1e5, Math.log2(4))));
+        a3.getDescription = (_) => Utils.getMath(getDesc(a3.level));
+        a3.getInfo = (amount) => Utils.getMathTo(getInfo(a3.level), getInfo(a3.level + amount));
+    }
   
     /////////////////////
     // Permanent Upgrades
@@ -50,15 +58,37 @@ var init = () => {
         c2.getInfo = (amount) => "$\\uparrow$ $a_2$ factor by 1";
     }
     theory.createAutoBuyerUpgrade(4, currency, 1e35);
+    //c3
+      {
+        c3 = theory.createPermanentUpgrade(5, currency, new ExponentialCost(1e10, Math.log2(10)));
+        c3.getDescription = (amount) => "$\\uparrow$ $a_3$ factor by 1";
+        c3.getInfo = (amount) => "$\\uparrow$ $a_3$ factor by 1";
+    }
   
     ///////////////////////
     //// Milestone Upgrades
     theory.setMilestoneCost(new LinearCost(2, 2));
   
+    {
+        a2Exp = theory.createMilestoneUpgrade(0, 2);
+        a2Exp.description = Localization.getUpgradeIncCustomExpDesc("a_2", "0.15");
+        a2Exp.info = Localization.getUpgradeIncCustomExpInfo("a_2", "0.15");
+        a2Exp.boughtOrRefunded = (_) => { 
+          updateAvailability();
+          theory.invalidatePrimaryEquation() 
+        };
+    }
+  
     /////////////////
     //// Achievements
     let achievement_category_1 = theory.createAchievementCategory(0, "Timer");
     achievement1 = theory.createAchievement(0, achievement_category_1, "You Played!", "I Think now.", () => timer.value > 1);
+
+    updateAvailability();
+}
+
+var updateAvailability = () => {
+    //something releated
 }
 
 var tick = (elapsedTime, multiplier) => {
@@ -66,11 +96,17 @@ var tick = (elapsedTime, multiplier) => {
     let bonus = theory.publicationMultiplier;
     timer.value += BigNumber.from(0.1)
     currency.value += dt * bonus * getA1(a1.level).pow(1.025) *
-                                   getA2(a2.level)
+                                   getA2(a2.level) *
+                                   getA3(a3.level)
 }
 
 var getPrimaryEquation = () => {
     let result = "\\dot{\\rho} = a_1^{1.025}a_2";
+  
+    if (a2Exp.level == 1) result += "^{1.15}";
+    if (a2Exp.level == 2) result += "^{1.3}";
+  
+    result += "a_3"
 
     return result;
 }
@@ -85,5 +121,6 @@ var getA1 = (level) => BigNumber.from(level).sqrt() * getA1Factor(c1.level);
 var getA2 = (level) => BigNumber.from(level).sqrt() * getA2Factor(c2.level);
 var getA1Factor = (level) => BigNumber.from(1 + level);
 var getA2Factor = (level) => BigNumber.from(1 + level);
+var getA2Exponent = (level) => BigNumber.from(1 + 0.15 * level);
 
 init();
