@@ -36,7 +36,7 @@ var init = () => {
     {
         let getDesc = (level) => "a_3=" + getA3Factor(c3.level) + "\\sqrt{" + level + "}";
         let getInfo = (level) => "a_3=" + getA3(level).toString(0);
-        a3 = theory.createUpgrade(1, currency, new FirstFreeCost(new ExponentialCost(1e5, Math.log2(4))));
+        a3 = theory.createUpgrade(2, currency, new FirstFreeCost(new ExponentialCost(1e5, Math.log2(4))));
         a3.getDescription = (_) => Utils.getMath(getDesc(a3.level));
         a3.getInfo = (amount) => Utils.getMathTo(getInfo(a3.level), getInfo(a3.level + amount));
     }
