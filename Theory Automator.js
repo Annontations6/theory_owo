@@ -65,7 +65,8 @@ var tick = (elapsedTime, multiplier) => {
     let dt = BigNumber.from(elapsedTime * multiplier);
     let bonus = theory.publicationMultiplier;
     timer.value += BigNumber.from(0.1)
-    currency.value += dt * bonus * getA1(a1.level).pow(1.025)
+    currency.value += dt * bonus * getA1(a1.level).pow(1.025) *
+                                   getA2(a2.level)
 }
 
 var getPrimaryEquation = () => {
