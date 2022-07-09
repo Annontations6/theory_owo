@@ -1,1 +1,1 @@
-# theory_owo
+# Theory-automator
